@@ -39,8 +39,8 @@ public class MessageController {
 	
 	@PostMapping
 	public Map<String, String> createOne(@RequestBody Map<String, String> message ){
-	
-		message.put("id", String.valueOf(counter+1));
+		counter+=1;
+		message.put("id", String.valueOf(counter));
 		messages.add(message);
 		return message;
 	}

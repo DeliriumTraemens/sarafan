@@ -1,6 +1,7 @@
 var messageApi = Vue.resource('/message{/id}');
 
 Vue.component('message-form',{
+    props: ['messages','messageAttr'],
     data: function() {
         return{
             text:''
@@ -11,27 +12,57 @@ Vue.component('message-form',{
             '<input type="button" value="Save" @click="save">' +
         '</div>',
     methods:{
-        click: function(){
+        save: function(){
             var message={text: this.text};
+            messageApi.save({}, message).then(result =>
+            result.json().then(data =>{
+                this.messages.push(data);
+                this.text ='';
+            })
+            )
         }
     }
 });
 
 Vue.component('message-row',{
-    props:['bla'],
-    template: '<li> <i>({{bla.id }})</i> {{ bla.text}}</li> '
+    props:['bla','editMethod'],
+    template: '<li> <i>({{bla.id }}) </i> {{ bla.text }} ' +
+        '<span>' +
+            '<input type="button" value="Edit" @click="edit">' +
+        '</span>' +
+        '</li> ',
+    methods:{
+        edit: function(){
+            this.editMethod(bla)
+        }
+    }
 })
+//7:06
 
 Vue.component('messages-list',{
-    props:['messages'],
-    template: '<ul> <message-row v-for="bla in messages" :bla="bla" :key="bla.id"/> </ul>',
+    props:['messages','message'],
+    data: function(){
+        return{
+            message:null
+        }
+    },
+    template:
+        '<div>' +
+        '<message-form :messages="messages" :messageAttr="message"/>' +
+        ' <message-row v-for="bla in messages" :key="bla.id" :bla="bla" :editMethod="editMethod"/> </div>',
     created: function(){
         messageApi.get().then(result =>
             result.json().then(data=>
                 data.forEach(message => this.messages.push(message))
             )
         );
+    },
+    methods: {
+        editMethod: function(bla) {
+            this.message = bla;
+        }
     }
+
 });
 
 var app = new Vue({
