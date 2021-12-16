@@ -4,7 +4,14 @@ Vue.component('message-form',{
     props: ['messages','messageAttr'],
     data: function() {
         return{
-            text:''
+            text:'',
+            id:''
+        }
+    },
+    watch:{
+        messageAttr: function(newVal,oldVal){
+            this.text=newVal.text;
+            this.id=newVal.id;
         }
     },
     template: '<div>' +

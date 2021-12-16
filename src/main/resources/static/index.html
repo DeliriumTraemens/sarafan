@@ -17,6 +17,30 @@
 <h1>Всем привет!</h1>
 <h5>learn.javascript.ru - Do not Forget!</h5>
 <div id="app">{{messages}}</div>
+<hr>
+<div id="learn1">{{insertion}}</div>
+<hr>
+<div id="app2">
+    <span :title="newInsert">
+          Наведи на меня курсор на пару секунд,
+    чтобы увидеть динамически связанное значение title!
+    </span>
+</div>
+<script>
+    var learn1=new Vue({
+        el: '#learn1',
+        data:{
+            insertion: 'Heyyy There!'
+        }
+    });
+
+    var learn2=new Vue({
+        el: '#app2',
+        data:{
+            newInsert: 'Вы загрузили эту страницу за ' + new Date().toLocaleString()
+        }
+    })
+</script>
 <script src="/js/main.js"></script>
 </body>
 </html>
