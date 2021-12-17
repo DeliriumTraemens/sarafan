@@ -26,6 +26,28 @@
     чтобы увидеть динамически связанное значение title!
     </span>
 </div>
+
+<div id="app4">
+    <ol>
+        <li v-for="todo in todos">
+            {{todo.text}}
+        </li>
+    </ol>
+</div>
+<hr>
+<div id="app5">
+    <p>{{message}}</p>
+    <button v-on:click="reverseMessage">Reverse Text</button>
+</div>
+<hr>
+<div id="app6">
+    <p>{{message}}</p>
+    <input v-model="message">
+    <button v-on:click="clatz">Clatz</button>
+</div>
+<hr>
+<hr>
+
 <script>
     var learn1=new Vue({
         el: '#learn1',
@@ -40,6 +62,43 @@
             newInsert: 'Вы загрузили эту страницу за ' + new Date().toLocaleString()
         }
     })
+
+    var app4=new Vue({
+        el:'#app4',
+        data:{
+            todos: [
+                    {text: 'First'},
+                    {text: 'Second'},
+                    {text: 'Third'},
+                    {text: 'Fourth'},
+                ]
+        }
+    })
+
+    var app5=new Vue({
+        el:'#app5',
+        data:{
+            message: 'Hello here!'
+        },
+        methods:{
+            reverseMessage: function(){
+                this.message = this.message.split('').reverse().join('')
+            }
+        }
+    })
+
+    var app6=new Vue({
+        el:'#app6',
+        data:{
+            message: 'Sei Gesund!'
+        },
+        methods:{
+            clatz: function(){
+                alert(app6.data.message.reverse)
+            }
+        }
+    })
+
 </script>
 <script src="/js/main.js"></script>
 </body>

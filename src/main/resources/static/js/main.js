@@ -1,3 +1,13 @@
+//13.43
+function getIndex(list,id){
+    for (var i = 0; i <list.length ; i++) {
+        if(list[i].id === id){
+            return i;
+        }
+    }
+    return -1;
+}
+
 var messageApi = Vue.resource('/message{/id}');
 
 Vue.component('message-form',{
@@ -21,6 +31,16 @@ Vue.component('message-form',{
     methods:{
         save: function(){
             var message={text: this.text};
+            if(this.id){
+                messageApi.update({id:this.id},message).then(result =>
+                    result.json().then(data =>{
+                        var index=getIndex(this.messages, data.id);
+                        this.messages.splice(index, 1, data);
+                        this.text =''
+                        this.id=''
+                    })
+                )
+            } else
             messageApi.save({}, message).then(result =>
             result.json().then(data =>{
                 this.messages.push(data);
@@ -32,15 +52,25 @@ Vue.component('message-form',{
 });
 
 Vue.component('message-row',{
-    props:['bla','editMethod'],
+    props:['bla','editMethod','messages'],
     template: '<li> <i>({{bla.id }}) </i> {{ bla.text }} ' +
-        '<span>' +
+        '<span style="position:absolute; right: 0">' +
             '<input type="button" value="Edit" @click="edit">' +
+            '<input type="button" value="x" @click="del">' +
         '</span>' +
         '</li> ',
     methods:{
         edit: function(){
-            this.editMethod(bla)
+            alert(this.bla.text);
+            this.editMethod(this.bla)
+        },
+        del: function(){
+            // alert(this.bla.id+' '+this.bla.text);
+            messageApi.remove({id: this.bla.id}).then(result =>{
+                if(result.ok){
+                    this.messages.splice(this.messages.indexOf(this.bla), 1)
+                }
+            })
         }
     }
 })
@@ -54,9 +84,10 @@ Vue.component('messages-list',{
         }
     },
     template:
-        '<div>' +
-        '<message-form :messages="messages" :messageAttr="message"/>' +
-        ' <message-row v-for="bla in messages" :key="bla.id" :bla="bla" :editMethod="editMethod"/> </div>',
+        '<div style="position:relative; width: 300px;">' +
+        '<message-form v-bind:messages="messages" v-bind:messageAttr="message"/>' +
+        ' <message-row v-for="bla in messages" :key="bla.id" :bla="bla" ' +
+        ':messages="messages" :editMethod="editMethod"/> </div>',
     created: function(){
         messageApi.get().then(result =>
             result.json().then(data=>
