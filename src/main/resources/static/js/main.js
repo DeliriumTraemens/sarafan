@@ -53,7 +53,7 @@ Vue.component('message-form',{
 
 Vue.component('message-row',{
     props:['bla','editMethod','messages'],
-    template: '<li> <i>({{bla.id }}) </i> {{ bla.text }} ' +
+    template: '<li> <i>{{bla.id }} </i> {{ bla.text }} ' +
         '<span style="position:absolute; right: 0">' +
             '<input type="button" value="Edit" @click="edit">' +
             '<input type="button" value="x" @click="del">' +
@@ -94,6 +94,7 @@ Vue.component('messages-list',{
                 data.forEach(message => this.messages.push(message))
             )
         );
+        console.log(this.messages);
     },
     methods: {
         editMethod: function(bla) {
